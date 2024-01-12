@@ -1,4 +1,5 @@
 import { card } from "../card/card.js";
+import { handleError } from "../utils/error.js";
 const myLibrary = [];
 class Book {
     constructor(author, title, pages, read) {
@@ -20,26 +21,48 @@ function displayBooks() {
         container.append(contentCard);
     });
 }
-(() => {
+function handleInput() {
     const authorInput = document.querySelector("#author-input");
     const titleInput = document.querySelector("#title-input");
     const numberInput = document.querySelector("#number-input");
     const readCheckbox = document.querySelector("#read-input");
-    const addBtn = document.querySelector(".add-btn");
-    addBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (authorInput.value.trim() &&
-            titleInput.value.trim() &&
-            parseInt(numberInput.value)) {
-            addBookToLibrary(authorInput.value.trim(), titleInput.value.trim(), parseInt(numberInput.value), readCheckbox.checked);
-            displayBooks();
-            authorInput.value = "";
-            titleInput.value = "";
-            numberInput.value = "";
-            readCheckbox.checked = false;
-        }
-    });
-})();
+    const input = {
+        author: authorInput.value,
+        title: titleInput.value,
+        number: parseInt(numberInput.value),
+        read: readCheckbox.checked,
+    };
+    let isValid = true;
+    if (!input.author) {
+        handleError(authorInput, "This field is required");
+        isValid = false;
+    }
+    if (!input.title) {
+        handleError(titleInput, "This field is required");
+        isValid = false;
+    }
+    if (!input.number) {
+        handleError(numberInput, "This field is required");
+        isValid = false;
+    }
+    if (isValid) {
+        authorInput.value = "";
+        titleInput.value = "";
+        numberInput.value = "";
+        readCheckbox.checked = false;
+        return input;
+    }
+    else {
+        return null;
+    }
+}
+const addBtn = document.querySelector(".add-btn");
+addBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const ValidInput = handleInput();
+    addBookToLibrary(ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.author, ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.title, ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.number, ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.read);
+    displayBooks();
+});
 function init() {
     displayBooks();
 }

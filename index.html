@@ -14,8 +14,8 @@
     </header>
     <main>
         <div class="main__header">
-            <button class="open-form-btn">Add a new book</button>
-            <form id="form" action="">
+            <button class="open-form-btn" aria-label="add a new book">Add a new book</button>
+            <form id="form">
                 <div>
                     <label for="author-input">Author:</label>
                     <input type="text" name="author" id="author-input">
@@ -30,11 +30,11 @@
                 </div>
                 <div class="checkbox-group">
                     <label for="read-input">
-                        <span>Have you read the book?</span>
+                        <span >Have you read the book?</span>
                         <input type="checkbox" id="read-input" name="readBook">
                     </label>
                 </div>
-                <button class="add-btn"></button>
+                <button class="add-btn" aria-label="add"></button>
 
             </form>
         </div>
@@ -46,4 +46,5 @@
     </footer>
     <script src="/src/js/library/library.js" type="module"></script>
 </body>
+
 </html>

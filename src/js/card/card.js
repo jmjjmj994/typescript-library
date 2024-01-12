@@ -38,10 +38,11 @@ function createPagesElement(pages) {
 }
 function createReadElement(read) {
     const readStatusSpan = document.createElement("span");
+    readStatusSpan.textContent = "Have you read the book?";
     readStatusSpan.className = "read";
     const readStatusSpanContent = document.createElement("span");
     readStatusSpanContent.className = "main__cards-card--read";
-    readStatusSpanContent.textContent = read ? "Read" : "Not read";
+    readStatusSpanContent.textContent = read ? "Yes" : "No";
     readStatusSpan.append(readStatusSpanContent);
     return readStatusSpan;
 }

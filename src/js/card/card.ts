@@ -42,12 +42,13 @@ function createPagesElement(pages: number) {
 
 function createReadElement(read: boolean) {
   const readStatusSpan = document.createElement("span") as HTMLSpanElement;
+  readStatusSpan.textContent = "Have you read the book?"
   readStatusSpan.className = "read";
   const readStatusSpanContent = document.createElement(
     "span"
   ) as HTMLSpanElement;
   readStatusSpanContent.className = "main__cards-card--read";
-  readStatusSpanContent.textContent = read ? "Read" : "Not read";
+  readStatusSpanContent.textContent = read ? "Yes" : "No";
   readStatusSpan.append(readStatusSpanContent);
   return readStatusSpan;
 }

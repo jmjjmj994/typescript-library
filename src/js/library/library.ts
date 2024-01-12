@@ -1,4 +1,5 @@
 import { card } from "../card/card.js";
+import { handleError } from "../utils/error.js";
 const myLibrary: Book[] = [];
 class Book {
   author: string;
@@ -31,7 +32,13 @@ function displayBooks(): void {
   });
 }
 
-(() => {
+function handleInput() {
+  interface Input {
+    author: string;
+    title: string;
+    number: number;
+    read: boolean;
+  }
   const authorInput = document.querySelector(
     "#author-input"
   ) as HTMLInputElement;
@@ -45,29 +52,47 @@ function displayBooks(): void {
     "#read-input"
   ) as HTMLInputElement;
 
-  const addBtn = document.querySelector(".add-btn") as HTMLButtonElement;
+  const input: Input = {
+    author: authorInput.value,
+    title: titleInput.value,
+    number: parseInt(numberInput.value),
+    read: readCheckbox.checked,
+  };
+  let isValid = true;
+  if (!input.author) {
+    handleError(authorInput, "This field is required");
+    isValid = false;
+  }
 
-  addBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (
-      authorInput.value.trim() &&
-      titleInput.value.trim() &&
-      parseInt(numberInput.value)
-    ) {
-      addBookToLibrary(
-        authorInput.value.trim(),
-        titleInput.value.trim(),
-        parseInt(numberInput.value),
-        readCheckbox.checked
-      );
-      displayBooks();
-      authorInput.value = "";
-      titleInput.value = "";
-      numberInput.value = "";
-      readCheckbox.checked = false;
-    }
-  });
-})();
+  if (!input.title) {
+    handleError(titleInput, "This field is required");
+    isValid = false;
+  }
+
+  if (!input.number) {
+    handleError(numberInput, "This field is required");
+    isValid = false;
+  }
+
+  if (isValid) {
+    authorInput.value = "";
+    titleInput.value = "";
+    numberInput.value = "";
+    readCheckbox.checked = false;
+    return input;
+  } else {
+    return null;
+  }
+}
+
+const addBtn = document.querySelector(".add-btn") as HTMLButtonElement;
+addBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  const ValidInput = handleInput();
+  addBookToLibrary(ValidInput?.author, ValidInput?.title, ValidInput?.number, ValidInput?.read)
+  displayBooks()
+});
+
 
 function init() {
   displayBooks();
