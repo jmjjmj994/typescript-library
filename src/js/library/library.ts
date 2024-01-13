@@ -12,7 +12,13 @@ class Book {
     this.pages = pages;
     this.read = read;
   }
+
+
 }
+
+
+
+
 
 function addBookToLibrary(
   author: string,
@@ -26,8 +32,9 @@ function addBookToLibrary(
 function displayBooks(): void {
   const container = document.querySelector(".main__cards") as HTMLDivElement;
   container.innerHTML = "";
-  myLibrary.forEach((book) => {
-    const contentCard = card(book.author, book.title, book.pages, book.read);
+  myLibrary.forEach((book, index) => {
+    const contentCard = card(book.author, book.title, book.pages, book.read, index);
+    console.log(index)
     container.append(contentCard);
   });
 }
@@ -85,12 +92,22 @@ function handleInput() {
   }
 }
 
+addBookToLibrary("Hei", "nei", 1, false)
+
 const addBtn = document.querySelector(".add-btn") as HTMLButtonElement;
 addBtn.addEventListener("click", (e) => {
   e.preventDefault();
   const ValidInput = handleInput();
-  addBookToLibrary(ValidInput?.author, ValidInput?.title, ValidInput?.number, ValidInput?.read)
-  displayBooks()
+  if (ValidInput !== null) {
+      addBookToLibrary(
+        ValidInput.author,
+        ValidInput.title,
+        ValidInput.number,
+        ValidInput.read
+      );
+  displayBooks();
+  }
+
 });
 
 

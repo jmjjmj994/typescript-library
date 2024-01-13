@@ -16,8 +16,9 @@ function addBookToLibrary(author, title, pages, read) {
 function displayBooks() {
     const container = document.querySelector(".main__cards");
     container.innerHTML = "";
-    myLibrary.forEach((book) => {
-        const contentCard = card(book.author, book.title, book.pages, book.read);
+    myLibrary.forEach((book, index) => {
+        const contentCard = card(book.author, book.title, book.pages, book.read, index);
+        console.log(index);
         container.append(contentCard);
     });
 }
@@ -56,12 +57,15 @@ function handleInput() {
         return null;
     }
 }
+addBookToLibrary("Hei", "nei", 1, false);
 const addBtn = document.querySelector(".add-btn");
 addBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const ValidInput = handleInput();
-    addBookToLibrary(ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.author, ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.title, ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.number, ValidInput === null || ValidInput === void 0 ? void 0 : ValidInput.read);
-    displayBooks();
+    if (ValidInput !== null) {
+        addBookToLibrary(ValidInput.author, ValidInput.title, ValidInput.number, ValidInput.read);
+        displayBooks();
+    }
 });
 function init() {
     displayBooks();

@@ -1,4 +1,10 @@
-export function card(author: string, title: string, pages: number, read: boolean) {
+import { toggleReadStatus } from "../eventlisteners/eventlisteners.js";
+export function card(
+  author: string,
+  title: string,
+  pages: number,
+  read: boolean
+) {
   const authorEle = createAuthorElement(author);
   const titleEle = createTitleElement(title);
   const pagesEle = createPagesElement(pages);
@@ -42,16 +48,14 @@ function createPagesElement(pages: number) {
 
 function createReadElement(read: boolean) {
   const readStatusSpan = document.createElement("span") as HTMLSpanElement;
-  readStatusSpan.textContent = "Have you read the book?"
+  readStatusSpan.textContent = "Have you read the book?";
   readStatusSpan.className = "read";
-  const readStatusSpanContent = document.createElement(
-    "span"
-  ) as HTMLSpanElement;
-  readStatusSpanContent.className = "main__cards-card--read";
-  readStatusSpanContent.textContent = read ? "Yes" : "No";
-  readStatusSpan.append(readStatusSpanContent);
+  toggleButton.textContent = read ? "Yes" : "No";
+  readStatusSpan.append(toggleButton);
   return readStatusSpan;
 }
+
+
 
 function createCardButton(callback: () => void) {
   const button = document.createElement("button") as HTMLButtonElement;
