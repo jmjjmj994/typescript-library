@@ -1,117 +1,110 @@
-import { card } from "../card/card.js";
-import { handleError } from "../utils/error.js";
-const myLibrary: Book[] = [];
+const myLibrary = [];
+
+//author, title, number of pages, whether it’s been read
 class Book {
   author: string;
   title: string;
   pages: number;
-  read: boolean = false;
-  constructor(author: string, title: string, pages: number, read: boolean) {
+  hasRead: boolean;
+  constructor(author: string, title: string, pages: number, hasRead = false) {
     this.author = author;
     this.title = title;
     this.pages = pages;
-    this.read = read;
-  }
-
-
-}
-
-
-
-
-
-function addBookToLibrary(
-  author: string,
-  title: string,
-  pages: number,
-  read: boolean
-) {
-  myLibrary.push(new Book(author, title, pages, read));
-}
-
-function displayBooks(): void {
-  const container = document.querySelector(".main__cards") as HTMLDivElement;
-  container.innerHTML = "";
-  myLibrary.forEach((book, index) => {
-    const contentCard = card(book.author, book.title, book.pages, book.read, index);
-    console.log(index)
-    container.append(contentCard);
-  });
-}
-
-function handleInput() {
-  interface Input {
-    author: string;
-    title: string;
-    number: number;
-    read: boolean;
-  }
-  const authorInput = document.querySelector(
-    "#author-input"
-  ) as HTMLInputElement;
-  const titleInput = document.querySelector("#title-input") as HTMLInputElement;
-
-  const numberInput = document.querySelector(
-    "#number-input"
-  ) as HTMLInputElement;
-
-  const readCheckbox = document.querySelector(
-    "#read-input"
-  ) as HTMLInputElement;
-
-  const input: Input = {
-    author: authorInput.value,
-    title: titleInput.value,
-    number: parseInt(numberInput.value),
-    read: readCheckbox.checked,
-  };
-  let isValid = true;
-  if (!input.author) {
-    handleError(authorInput, "This field is required");
-    isValid = false;
-  }
-
-  if (!input.title) {
-    handleError(titleInput, "This field is required");
-    isValid = false;
-  }
-
-  if (!input.number) {
-    handleError(numberInput, "This field is required");
-    isValid = false;
-  }
-
-  if (isValid) {
-    authorInput.value = "";
-    titleInput.value = "";
-    numberInput.value = "";
-    readCheckbox.checked = false;
-    return input;
-  } else {
-    return null;
+    this.hasRead = hasRead;
   }
 }
 
-addBookToLibrary("Hei", "nei", 1, false)
+class BookLibrary {
+  library: [];
+  constructor(library: []) {
+    this.library = library;
+  }
+}
 
-const addBtn = document.querySelector(".add-btn") as HTMLButtonElement;
-addBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  const ValidInput = handleInput();
-  if (ValidInput !== null) {
-      addBookToLibrary(
-        ValidInput.author,
-        ValidInput.title,
-        ValidInput.number,
-        ValidInput.read
-      );
-  displayBooks();
+class Input {
+  author: HTMLInputElement | null;
+  title: HTMLInputElement | null;
+  number: HTMLInputElement | null;
+  read: HTMLInputElement | null;
+  button: HTMLButtonElement | null;
+  object: object;
+  isValid: boolean;
+
+  constructor(
+    author: HTMLElement | null,
+    title: HTMLElement | null,
+    number: HTMLElement | null,
+    read: HTMLElement | null,
+    button: HTMLElement | null
+  ) {
+    this.author = author as HTMLInputElement | null;
+    this.title = title as HTMLInputElement | null;
+    this.number = number as HTMLInputElement | null;
+    this.read = read as HTMLInputElement | null;
+    this.button = button as HTMLButtonElement | null;
+    this.boundedGetValues = this.getValues.bind(this);
   }
 
-});
+  getValues() {
+    const object = {
+      author: this.author?.value.trim() || '',
+      title: this.title?.value.trim() || '',
+      number: this.number?.value.trim() || '',
+      read: this.read?.checked,
+    };
+    return object;
+  }
 
-
-function init() {
-  displayBooks();
+  handleValues(e) {
+    console.log(e);
+    e.preventDefault();
+    const inputObject = this.getValues();
+    let isValid = true;
+    if (!inputObject.author) {
+      isValid = false;
+    }
+    if (!inputObject.title) {
+      isValid = false;
+    }
+    if (!inputObject.number) {
+      isValid = false;
+    }
+    if (isValid) {
+      console.log('all valid');
+      return inputObject;
+    } else {
+      console.log('invalid input');
+      return null;
+    }
+  }
 }
-init();
+
+const inputElements = new Input(
+  document.querySelector('#author-input'),
+  document.querySelector('#title-input'),
+  document.querySelector('#number-input'),
+  document.querySelector('#read-input'),
+  document.querySelector('.add-btn')
+);
+
+//getting all values on the click. Do we want that?
+//OR get all values on input, then button calls the getValues method
+
+inputElements.author?.addEventListener('input', (e) =>
+  inputElements.getValues(e.target)
+);
+inputElements.title?.addEventListener('input', (e) =>
+  inputElements.getValues(e.target)
+);
+inputElements.number?.addEventListener('input', (e) =>
+  inputElements.getValues(e.target)
+);
+inputElements.read?.addEventListener('change', (e) =>
+  inputElements.getValues(e.target)
+);
+inputElements.button?.addEventListener('click', (e) =>
+  inputElements.handleValues(e)
+);
+function addBookToLibrary() {
+  // do stuff here
+}
