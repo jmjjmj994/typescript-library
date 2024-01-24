@@ -1,0 +1,5 @@
+Remove a given book;
+
+1. get the index of the book array. 
+2. check if index of book array is equal to index passed on the for each
+3. return a new array with the updated array

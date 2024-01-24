@@ -1,6 +1,7 @@
 import { card } from '../cards/cards.js';
 
-class Book {
+export class Book {
+  //Public, instead of manual binding (this) public does it for you. In the JS file, all arguments are binded with this.
   constructor(
     public author: string,
     public title: string,
@@ -8,7 +9,7 @@ class Book {
     public hasRead: boolean = false
   ) {}
 }
-class AddBook {
+export class AddBook {
   bookArr: Book[];
   constructor(bookArr: Book[] = []) {
     this.bookArr = bookArr;
@@ -16,6 +17,12 @@ class AddBook {
 
   storeBook(book: Book) {
     this.bookArr.push(book);
+  }
+
+  removeBook(index: number) {
+    //Removing books which is not equal to the index.
+    this.bookArr = this.bookArr.filter((book, i) => i !== index);
+    createBooks();
   }
 }
 
@@ -33,12 +40,12 @@ const createBooks = (): void => {
   const cardContainer = document.querySelector(
     '.main__cards'
   ) as HTMLDivElement;
+  cardContainer.innerHTML = '';
   if (books.length === 0) {
     console.log('Currently empty');
   } else {
-    cardContainer.innerHTML = '';
-    books.forEach(({ author, title, pages, hasRead }) => {
-      cardContainer.append(card(author, title, pages, hasRead));
+    books.forEach(({ author, title, pages, hasRead }, index) => {
+      cardContainer.append(card(bookArr, index, author, title, pages, hasRead));
     });
   }
 };

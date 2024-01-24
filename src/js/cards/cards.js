@@ -28,9 +28,15 @@ const cardReadStatus = (hasRead) => {
     readButton.textContent = hasRead ? 'I have read it' : 'I have not read it';
     return readButton;
 };
-const card = (author, title, pages, hasRead) => {
+const removeButton = (bookArr, index) => {
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Remove';
+    removeButton.addEventListener('click', () => bookArr.removeBook(index));
+    return removeButton;
+};
+const card = (bookArr, index, author, title, pages, hasRead) => {
     const card = document.createElement('div');
     card.className = 'main__cards-card';
-    card.append(cardAuthor(author), cardTitle(title), cardPages(pages), cardReadStatus(hasRead));
+    card.append(cardAuthor(author), cardTitle(title), cardPages(pages), cardReadStatus(hasRead), removeButton(bookArr, index));
     return card;
 };

@@ -1,4 +1,5 @@
 export { card };
+import { AddBook, Book } from '../library/library.js';
 
 const cardAuthor = (author: string): HTMLSpanElement => {
   const authorElemSpan = document.createElement('span') as HTMLSpanElement;
@@ -33,7 +34,16 @@ const cardReadStatus = (hasRead: boolean): HTMLButtonElement => {
   return readButton;
 };
 
+const removeButton = (bookArr:AddBook, index:number): HTMLButtonElement => {
+  const removeButton = document.createElement('button') as HTMLButtonElement;
+  removeButton.textContent = 'Remove';
+  removeButton.addEventListener('click',() =>  bookArr.removeBook(index));
+  return removeButton;
+};
+
 const card = (
+  bookArr:AddBook,
+  index:number,
   author: string,
   title: string,
   pages: string,
@@ -45,7 +55,9 @@ const card = (
     cardAuthor(author),
     cardTitle(title),
     cardPages(pages),
-    cardReadStatus(hasRead)
+    cardReadStatus(hasRead),
+    removeButton(bookArr, index)
   );
+
   return card;
 };
