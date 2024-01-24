@@ -1,7 +1,4 @@
-"use strict";
-var _a, _b, _c, _d, _e;
-const myLibrary = [];
-//author, title, number of pages, whether it’s been read
+import { card } from '../cards/cards.js';
 class Book {
     constructor(author, title, pages, hasRead = false) {
         this.author = author;
@@ -10,62 +7,84 @@ class Book {
         this.hasRead = hasRead;
     }
 }
-class BookLibrary {
-    constructor(library) {
-        this.library = library;
+class AddBook {
+    constructor(bookArr = []) {
+        this.bookArr = bookArr;
+    }
+    storeBook(book) {
+        this.bookArr.push(book);
     }
 }
-class Input {
-    constructor(author, title, number, read, button) {
-        this.author = author;
-        this.title = title;
-        this.number = number;
-        this.read = read;
+const bookArr = new AddBook();
+const createBooks = () => {
+    const books = bookArr.bookArr;
+    const cardContainer = document.querySelector('.main__cards');
+    if (books.length === 0) {
+        console.log('Currently empty');
+    }
+    else {
+        cardContainer.innerHTML = '';
+        books.forEach(({ author, title, pages, hasRead }) => {
+            cardContainer.append(card(author, title, pages, hasRead));
+        });
+    }
+};
+createBooks();
+class InputElements {
+    constructor(authorInput, titleInput, pagesInput, hasReadInput, button) {
+        this.authorInput = authorInput;
+        this.titleInput = titleInput;
+        this.pagesInput = pagesInput;
+        this.hasReadInput = hasReadInput;
         this.button = button;
-        this.boundedGetValues = this.getValues.bind(this);
-    }
-    getValues() {
-        var _a, _b, _c, _d;
-        const object = {
-            author: ((_a = this.author) === null || _a === void 0 ? void 0 : _a.value.trim()) || '',
-            title: ((_b = this.title) === null || _b === void 0 ? void 0 : _b.value.trim()) || '',
-            number: ((_c = this.number) === null || _c === void 0 ? void 0 : _c.value.trim()) || '',
-            read: (_d = this.read) === null || _d === void 0 ? void 0 : _d.checked,
+        this.inputStorage = {
+            authorInputValue: '',
+            titleInputValue: '',
+            pagesInputValue: '',
+            hasReadInputValue: false,
         };
-        return object;
     }
-    handleValues(e) {
-        console.log(e);
-        e.preventDefault();
-        const inputObject = this.getValues();
+    getInputValue() {
+        var _a, _b, _c, _d;
+        //store the input values in a object, object is in the class InputElements
+        this.inputStorage = {
+            authorInputValue: ((_a = this.authorInput) === null || _a === void 0 ? void 0 : _a.value.trim()) || '',
+            titleInputValue: ((_b = this.titleInput) === null || _b === void 0 ? void 0 : _b.value.trim()) || '',
+            pagesInputValue: ((_c = this.pagesInput) === null || _c === void 0 ? void 0 : _c.value.trim()) || '',
+            hasReadInputValue: ((_d = this.hasReadInput) === null || _d === void 0 ? void 0 : _d.checked) || false,
+        };
         let isValid = true;
-        if (!inputObject.author) {
+        if (!this.inputStorage.authorInputValue) {
             isValid = false;
         }
-        if (!inputObject.title) {
+        if (!this.inputStorage.titleInputValue) {
             isValid = false;
         }
-        if (!inputObject.number) {
+        if (!this.inputStorage.pagesInputValue) {
             isValid = false;
         }
         if (isValid) {
-            console.log('all valid');
-            return inputObject;
+            return new Book(this.inputStorage.authorInputValue, this.inputStorage.titleInputValue, this.inputStorage.pagesInputValue, this.inputStorage.hasReadInputValue);
         }
         else {
-            console.log('invalid input');
             return null;
         }
     }
+    submitInputValue(e) {
+        e.preventDefault();
+        const book = this.getInputValue();
+        if (book !== null) {
+            bookArr.storeBook(book);
+            createBooks();
+        }
+        else {
+            console.log('Invalid book');
+        }
+    }
 }
-const inputElements = new Input(document.querySelector('#author-input'), document.querySelector('#title-input'), document.querySelector('#number-input'), document.querySelector('#read-input'), document.querySelector('.add-btn'));
-//getting all values on the click. Do we want that?
-//OR get all values on input, then button calls the getValues method
-(_a = inputElements.author) === null || _a === void 0 ? void 0 : _a.addEventListener('input', (e) => inputElements.getValues(e.target));
-(_b = inputElements.title) === null || _b === void 0 ? void 0 : _b.addEventListener('input', (e) => inputElements.getValues(e.target));
-(_c = inputElements.number) === null || _c === void 0 ? void 0 : _c.addEventListener('input', (e) => inputElements.getValues(e.target));
-(_d = inputElements.read) === null || _d === void 0 ? void 0 : _d.addEventListener('change', (e) => inputElements.getValues(e.target));
-(_e = inputElements.button) === null || _e === void 0 ? void 0 : _e.addEventListener('click', (e) => inputElements.handleValues(e));
-function addBookToLibrary() {
-    // do stuff here
-}
+const input = new InputElements(document.querySelector('#author-input'), document.querySelector('#title-input'), document.querySelector('#pages-input'), document.querySelector('#read-input'), document.querySelector('#add-submit-btn'));
+input.authorInput.addEventListener('input', () => input.getInputValue());
+input.titleInput.addEventListener('input', () => input.getInputValue());
+input.pagesInput.addEventListener('input', () => input.getInputValue());
+input.hasReadInput.addEventListener('change', () => input.getInputValue());
+input.button.addEventListener('click', (e) => input.submitInputValue(e));
